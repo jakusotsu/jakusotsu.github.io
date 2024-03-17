@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+				<html manifest="redbgrand.manifest">
+                <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                <title>Resident Evil: DBG Card Randomizer</title>
+                <script type="text/javascript" src="redbgrand.js" ></script>
+				<STYLE type=text/css>
+					A:link {
+						COLOR: red /*The color of the link*/
+					}
+					A:visited {
+						COLOR: #800080 /*The color of the visited link*/
+					}
+					A:hover {
+						COLOR: green /*The color of the mouseover or 'hover' link*/
+					}
+					BODY {
+						COLOR: white; /*The color of all the other text within the body of the page*/
+						background-color:black /*background color*/;
+						font-family: Arial;
+						font-size: 13px;
+					}
+					
+					td
+					{
+						text-align:left;
+						vertical-align:top;
+						padding:15px;
+					}
+					td.showWeapons
+					{
+						text-align:left;
+						vertical-align:top;
+						padding:15px;
+						width:350px;						word-wrap: normal;
+					}		
+					td.showItems
+					{
+						text-align:left;
+						vertical-align:top;
+						padding:15px;
+						width:115px;
+						word-wrap: normal;
+					}
+										td.showActions										{											text-align:left;											vertical-align:top;											padding:15px;											width:150px;						word-wrap: normal;										}
+					td.setSelect
+					{
+						padding:10px;
+						text-align:left;
+					}
+					td.numberSelect
+					{
+						padding:10px;
+						text-align:left;
+					}
+					table.itemTable
+					{
+						table-layout:fixed;
+						padding:0px;
+						height:200px;
+					}
+					tr
+					{
+						height:100px;
+					}
+					div.tablewrapper 
+					{
+						height: 350px;
+						overflow-y: visible;
+					}
+					div.totals
+					{
+						padding-left:15px;
+					}
+					font.header {color:rgb(150,18,18);font-family: Garamond; font-size: 30px; font-weight: bolder;}
+					font.crandomizer{color:rgb(150,18,18);font-family: Garamond; font-size: 20px; font-weight: bolder;}
+					font.original {color:rgb(224,37,27);}
+					font.alliance {color:rgb(0,100,245);}
+					font.outbreak {color:rgb(224,155,27);}
+					font.nightmare {color:rgb(218,45,227);}
+					font.mercenaries {color:rgb(139,137,137);}
+					font.ammoh {color:rgb(255,215,0);text-decoration:underline;font-weight: bolder;font-size: 14px;}
+					font.ammo {color:rgb(255,215,0);font-weight: bolder;}
+					font.weaponh {color:rgb(150,150,150);text-decoration:underline;font-weight: bolder;font-size: 14px;}
+					font.weapon {color:rgb(150,150,150);font-weight: bolder;}
+					font.actionh {color:rgb(164,211,238);text-decoration:underline;font-weight: bolder;font-size: 14px;}
+					font.action {color:rgb(164,211,238);font-weight: bolder;}
+					font.chooser {text-decoration:underline;font-weight: bolder;font-size: 14px;}
+					font.disclaimer{font-size: 10px; }
+					font.item {color:rgb(102,153,0);font-weight: bolder;}
+					font.mansionCards {color:rgb(153,0,0);font-weight: bolder;}
+					font.subheader {color:rgb(255,255,255); font-weight:bolder;}
+					font.card {font-weight:bolder;}
+					font.total {font-weight:bolder;}
+					</STYLE>
+                </head>
+                <body onload="onInit()">
+				
+                <font class="header">Resident Evil: DBG</font><br>
+				<font class="crandomizer">Card Randomizer</font>
+				<h3><font class="subheader">Resource Piles</font></h3>
+        <ul id="itemData" ></ul>
+		<div class="tablewrapper">
+		<table id="itemTable" class="itemTable">
+		<tr>
+			<td>
+			<div id="showAmmo"></div>
+			</td>
+			<td class="showWeapons">
+			<div id="showWeapons"></div>
+			</td>
+
+
+
+		</tr>
+		<tr>
+			<td class="showItems">
+			<div id="showItems"></div>
+			</td>
+			<td class="showActions">
+			<div id="showActions"></div>
+			</td>
+
+
+			
+		<td>
+			<div id="showMansionCards"></div>
+			</td>
+		</tr>
+		</table>
+		</div>
+		
+		<h3><font class="subheader">Choose Sets</font></h3>
+		<form name="selectionsForm" id="selectionsForm">
+		<input type="button" name="getCards" value="Get Cards" onclick="onGetCards()" />
+    
+        <table>
+		<td class="setSelect">
+			<input type="checkbox" name="cardSet" id= "original" value="original"><label for="original"><font class="original">Base</font> </label><br>
+			<input type="checkbox" name="cardSet" id= "alliance" value="alliance"><label for="alliance"><font class="alliance">Alliance</font></label><br>
+			<input type="checkbox" name="cardSet" id= "outbreak" value="outbreak" checked="yes"><label for="outbreak"><font class="outbreak">OutBreak</font></label><br>
+			<input type="checkbox" name="cardSet" id= "nightmare" value="nightmare" checked="yes"><label for="nightmare"><font class="nightmare">Nightmare</font></label><br>
+			<input type="checkbox" name="cardSet" id= "mercenaries" value="mercenaries" checked="yes"><label for="mercenaries"><font class="mercenaries">Mercenaries</font></label><br>
+			<br>
+		</td>
+		<td class="numberSelect">
+			<select name="weaponCount" >
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option selected="selected">5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+				<option>9</option>
+				<option>10</option>
+			</select>
+			Number of <font class="weapon"><b>Weapons</b></font> to include
+			<br>
+			<select name="actionCount" >
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+				<option  selected="selected">7</option>
+				<option>8</option>
+				<option>9</option>
+				<option>10</option>
+			</select>
+			Number of <font class="action"><b>Actions</b></font> to include
+			<br>
+			<select name="itemCount" >
+				<option selected="selected">1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+			</select>
+			Number of <font class="item"><b>Items</b></font> to include
+			<br>
+			<select name="mansionCount" >
+				<option selected="selected">0</option>
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+				<option>9</option>
+				<option>10</option>
+				<option>11</option>
+				<option>12</option>
+				<option>13</option>
+			</select>
+			Number of <font class="mansionCards"><b>Mansion Events & Items</b></font> to include
+			<br>
+			<input type="checkbox" name="exclusions" id= "basicResource" value="basicResource" checked="yes"><label for="basicResource"><font class="basicResource">Include Basic Weapons</font> </label><br>
+			<input hidden type="checkbox" name="exclusions" id= "tokens" value="tokens" checked="yes"><label for="tokens"><font class="tokens"><div hidden>Exclude Token Weapons from Resource Area</div></font> </label>
+			<br>
+			</td>
+			</table>
+        </form>
+		<h3><font class="subheader">Totals</font></h3>
+
+		<div id="totals" class="totals">
+		<div id="ammoTotal"><font class="ammo">Ammo</font> Total: <font class="total" id="ammoCount">0</font></div>
+		<div id="actionTotal"><font class="action">Action</font> Total: <font class="total" id="actionCount"/>0</font></div>
+		<div id="weaponTotal"><font class="weapon">Weapon</font> Total: <font class="total" id="weaponCount"/>0</font></div>
+		<div id="itemTotal"><font class="item">Item</font> Total: <font class="total" id="itemCount"/>0</font></div>
+		<div id="cardTotal"><font class="card">Resource</font> Total: <font class="total" id="cardCount"/>0</font></div>
+		</div>
+		
+		
+		
+        <div id="status"></div>
+		<br>
+		<br>
+		<div hidden>
+		If your cards don't seem to be up to date, try clearing the browser's local storage by pressing the Clear Storage button.
+		</div>
+		REDBG Randomizer originally created by GamerAtom. Currently maintained by Jakusotsu.
+		<br>
+		<input hidden type="button" name="clearStorage" value="Clear Storage" onclick="onClearStorage()" />
+		<br><br>
+
+   </body>
+</html>
