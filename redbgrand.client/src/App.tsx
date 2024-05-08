@@ -1,62 +1,6 @@
 import { useEffect, useState } from 'react';
-import React from 'react';
 import './App.css';
-/*import './index.css';*/
 
-/*interface Forecast {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
-}*/
-
-
-
-
-/*function App() {
-    const [forecasts, setForecasts] = useState<Forecast[]>();
-
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
-
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tabelLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
-    return (
-        <div>
-            <h1 id="tabelLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
-    );
-
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
-    }
-}*/
 interface Cardd {
 	name: string;
 	filepath: string;
@@ -66,12 +10,13 @@ interface Cardd {
 	description: string;
 }
 function App() {
-	const defaultCard: CardProps = {
+/*	const defaultCard: CardProps = {
 		type: 'Item',
 		name: 'Green Herb',
 		cost: 20,
 		set: 'Base'
 	}
+*/
 	useEffect(() => {
 		populateCardsData();
 	}, []);
@@ -80,7 +25,7 @@ function App() {
 		const data = await response.json();
 		setCards(data);
 	}
-	const [cards, setCards] = useState<Cardd[]>([]);
+	const [cards, setCards] = useState<any[]>([]);
 	const cardRows = cards === undefined ? [] : cards.reduce((resultArray, item, index) => {
 		const rowIndex = Math.floor(index / 6);
 
@@ -99,10 +44,10 @@ function App() {
                 <div className="content">
                     <table className="table">
                         <tbody>
-                            {cardRows.map((row, rowIndex) => (
+                            {cardRows.map((row: Cardd[], rowIndex: number) => (
                                 <tr key={rowIndex}>
-                                    {row.map((cell: CardProps, _cellIndex: number) => (
-                                        <Card {...cell} />
+                                    {row.map((cell: CardProps, cellIndex: number) => (
+										<Card key={cellIndex} {...cell} />
                                     ))}
                                 </tr>
                             ))}
@@ -114,14 +59,6 @@ function App() {
             </div>
         </>
 	);
-
-
-
-/*	const [forecasts, setForecasts] = useState<Forecast[]>();*/
-
-
-
-
 }
 
 interface CardProps {
@@ -206,21 +143,9 @@ const SelectInput: React.FC<SelectInputProps> = ({id, options, selected }) => {
 		</select>
 	);
 };
-/*function CardTable() {
+export default App;
 
-	return (
-		<table class="table">
-			{
-				for(let r = 0; r < 3; r++) {
-					for (let c = 0; c < 6; c++) {
 
-					}
-				}
-			}
-
-		</table>
-	)
-}*/
 /*
 function onInit(): void {
     try {
@@ -719,4 +644,3 @@ function createMercenariesSet() {
 	localStorage.mercenaries = JSON.stringify(mercenaries);
 }
 */
-export default App;
