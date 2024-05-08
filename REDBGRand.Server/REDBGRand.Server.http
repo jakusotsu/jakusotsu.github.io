@@ -1,0 +1,6 @@
+@REDBGRand.Server_HostAddress = http://localhost:5062
+
+GET {{REDBGRand.Server_HostAddress}}/cards/
+Accept: application/json
+
+###

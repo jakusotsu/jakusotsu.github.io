@@ -1,0 +1,24 @@
+header {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    font-family: "Compacta";
+    font-weight: lighter;
+}
+BODY {
+    COLOR: black;
+    background-color: black;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+html, body {
+    background-color: black; /* Set the background color */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    height: 100%; /* Set height to 100% */
+}

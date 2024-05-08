@@ -1,0 +1,328 @@
+﻿/*:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}*/
+
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+    a:hover {
+        color: #535bf2;
+    }
+
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+    button:hover {
+        border-color: #646cff;
+    }
+
+    button:focus,
+    button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
+    }
+
+/*@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}*/
+A:link {
+    COLOR: red /*The color of the link*/
+}
+
+A:visited {
+    COLOR: #800080 /*The color of the visited link*/
+}
+
+A:hover {
+    COLOR: green /*The color of the mouseover or 'hover' link*/
+}
+
+
+
+
+font.header {
+    color: rgb(150,18,18);
+    font-family: Garamond;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+font.crandomizer {
+    color: rgb(150,18,18);
+    font-family: Garamond;
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+font.original {
+    color: rgb(224,37,27);
+}
+
+font.alliance {
+    color: rgb(0,100,245);
+}
+
+font.outbreak {
+    color: rgb(224,155,27);
+}
+
+font.nightmare {
+    color: rgb(218,45,227);
+}
+
+font.mercenaries {
+    color: rgb(139,137,137);
+}
+
+font.ammoh {
+    color: rgb(255,215,0);
+    text-decoration: underline;
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+font.ammo {
+    color: rgb(255,215,0);
+    font-weight: bolder;
+}
+
+font.weaponh {
+    color: rgb(150,150,150);
+    text-decoration: underline;
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+font.weapon {
+    color: rgb(150,150,150);
+    font-weight: bolder;
+}
+
+font.actionh {
+    color: rgb(164,211,238);
+    text-decoration: underline;
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+font.action {
+    color: rgb(164,211,238);
+    font-weight: bolder;
+}
+
+font.chooser {
+    text-decoration: underline;
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+font.disclaimer {
+    font-size: 10px;
+}
+
+font.item {
+    color: rgb(102,153,0);
+    font-weight: bolder;
+}
+
+font.mansionCards {
+    color: rgb(153,0,0);
+    font-weight: bolder;
+}
+
+font.subheader {
+    color: rgb(255,255,255);
+    font-weight: bolder;
+}
+
+font.card {
+    font-weight: bolder;
+}
+
+font.total {
+    font-weight: bolder;
+}
+
+body {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+
+td, th {
+    width: 120px; /* Set a fixed width for table cells */
+    height: 180px; /* Set a fixed height for table cells */
+    min-width: 120px;
+    max-width: 120px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    font-size: 16px;
+    padding: 5px;
+    vertical-align: middle;
+    color: black;
+}
+
+tr {
+    height: 180px; /* Set a fixed height for table rows */
+    min-height: 180px; /* Ensure the minimum height of table rows */
+    filter: drop-shadow(0 0 0.75rem crimson);
+    background-color: black;
+}
+
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+.container {
+    display: flex;
+    justify-content: center; /* Horizontally center the content */
+    align-items: baseline; /* Vertically center the content */
+    height: 100vh; /* Optionally set the height to fill the viewport */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+.table {
+    border-collapse: separate;
+    margin: 0 auto; /* Add this line to center the table horizontally */
+    table-layout: fixed;
+    width: 100%;
+    /*    display: flex;*/
+    flex: 1;
+    max-width: 10vw;
+    background-color: black;
+}
+
+.panel {
+    width: 200px; /* Adjust the width as needed */
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 2px solid white;
+    border-radius: 10px; /* Add curved corners */
+    color: black;
+}
+
+.randomize-button {
+    width: 200px; /* Same width as the panel */
+    padding: 10px;
+    border-radius: 20px; /* Adjust the border radius for rounded corners */
+    background-color: black; /* Background color black */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid gray; /* Gray outline */
+    cursor: pointer;
+    margin-top: 20px; /* Adjust the margin as needed */
+    transition: background-color 0.3s ease;
+    position: relative; /* Needed for positioning the R */
+}
+
+    .randomize-button:hover {
+        background-color: #222; /* Darker background color on hover */
+    }
+
+
+.randomize-container {
+    text-align: center; /* Center the button horizontally */
+    margin-bottom: 20px; /* Add margin at the bottom to separate from the panel */
+}
+
+.randomize-button:hover {
+    background-color: #535bf2;
+}
+
+.red-letter {
+    color: red; /* Apply red color to the specified letters */
+}
+
+.content {
+    display: flex; /* Display children side by side */
+}
+
+.panel-container {
+    position: relative; /* Ensure proper positioning of children */
+    background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Adjust padding as needed */
+    margin-top: 20px; /* Adjust margin as needed */
+}
+
+.bold-label {
+    font-weight: bold;
+}
+
+header h1 {
+    font-size: 56px; /* Adjust the size as needed */
+}
+
+.card {
+    position: relative;
+    width: 120px; /* Adjust width as needed */
+    height: 180px; /* Adjust height as needed */
+    border: 1px solid black;*/ /* Add border for visualization */
+}
+
+.type {
+    position: absolute;
+    top: 10px; /* Adjust top position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.name {
+    position: absolute;
+    bottom: calc(50px); /* Adjust bottom position as needed */
+    align-items: center;
+}
+
+.cost {
+    position: absolute;
+    top: 10px; /* Adjust top position as needed */
+    right: 10px; /* Adjust right position as needed */
+}
+
+.set {
+    position: absolute;
+    bottom: 10px; /* Adjust bottom position as needed */
+    right: 10px; /* Adjust right position as needed */
+}
