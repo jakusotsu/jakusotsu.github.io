@@ -267,7 +267,7 @@ img {
 }
 
 .randomize-button:hover {
-    background-color: #535bf2;
+    background-color: rgb(150,18,18);
 }
 
 .red-letter {
@@ -298,7 +298,7 @@ header h1 {
     position: relative;
     width: 120px; /* Adjust width as needed */
     height: 180px; /* Adjust height as needed */
-    border: 1px solid black;*/ /* Add border for visualization */
+    border: 1px solid black; /* Add border for visualization */
 }
 
 .type {
@@ -312,7 +312,9 @@ header h1 {
 .name {
     position: absolute;
     bottom: calc(50px); /* Adjust bottom position as needed */
-    align-items: center;
+    text-align: center;
+    left: 0; /* Align the name to the left */
+    width: 100%; /* Make the name span the entire width */
 }
 
 .cost {

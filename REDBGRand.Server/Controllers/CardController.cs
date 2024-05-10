@@ -171,13 +171,41 @@ namespace REDBGRand.Server.Controllers
         [HttpGet(Name = "GetCards")]
         public IEnumerable<Card> Get()
         {
-            
             var rnd = new Random();
             var array = createOriginalSet().OrderBy(x => rnd.Next()).ToArray();
-
-            // Take the first 18 elements
             Card[] subArray = array.Take(18).ToArray();
             return subArray;
+        }
+
+
+        [HttpPost(Name = "GetFilteredCards")]
+        public IEnumerable<Card> GetFilteredCards([FromBody] Filters filters)
+        {
+            try
+            {
+                var rnd = new Random();
+                var combinedArray = createOriginalSet().Concat(createAllianceSet()).Concat(createOutBreakSet()).Concat(createNightmareSet()).Concat(createMercenariesSet()).ToArray();
+                Func<Card, bool> setComparator = (Card card) =>
+                filters.includeBase && card.Set == "Original" ||
+                filters.includeAlliance && card.Set == "Alliance" ||
+                filters.includeOutbreak && card.Set == "Outbreak" ||
+                filters.includeNightmare && card.Set == "Nightmare" ||
+                filters.includeMercenaries && card.Set == "Mercenaries";
+
+                var setFilteredArray = combinedArray.Where(setComparator).OrderBy(x => rnd.Next()).ToArray();
+                var itemFilteredArray = setFilteredArray.Where(card => card.Type == "Item").OrderBy(x => rnd.Next()).Take(int.Parse(filters.numItems)).ToArray();
+                var actionFilteredArray = setFilteredArray.Where(card => card.Type == "Action").OrderBy(x => rnd.Next()).Take(int.Parse(filters.numActions)).ToArray();
+                var weaponFilteredArray = setFilteredArray.Where(card => card.Type == "Weapon").OrderBy(x => rnd.Next()).Take(int.Parse(filters.numWeapons)).ToArray();
+                var finalArray = itemFilteredArray.Concat(actionFilteredArray).Concat(weaponFilteredArray).OrderBy(x => rnd.Next()).Take(18).ToArray();
+
+                return finalArray;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error filtering cards.");
+                //return StatusCode(500, "Error filtering cards.");
+                return [];
+            }
         }
     }
 }

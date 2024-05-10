@@ -9,23 +9,18 @@ interface Cardd {
 	cost: number;
 	description: string;
 }
+
 function App() {
-/*	const defaultCard: CardProps = {
-		type: 'Item',
-		name: 'Green Herb',
-		cost: 20,
-		set: 'Base'
-	}
-*/
-	useEffect(() => {
-		populateCardsData();
-	}, []);
-	async function populateCardsData() {
+	const [cards, setCards] = useState<any[]>([]);
+	const populateCardsData = async () => {
 		const response = await fetch('cards');
 		const data = await response.json();
 		setCards(data);
 	}
-	const [cards, setCards] = useState<any[]>([]);
+	useEffect(() => {
+		populateCardsData();
+	}, []);
+
 	const cardRows = cards === undefined ? [] : cards.reduce((resultArray, item, index) => {
 		const rowIndex = Math.floor(index / 6);
 
@@ -54,7 +49,7 @@ function App() {
                         </tbody>
 
                     </table>
-                    <Panel />
+					<Panel setCards={setCards} />
                 </div>
             </div>
         </>
@@ -67,45 +62,106 @@ interface CardProps {
 	cost: number;
 	set: string;
 }
-
-function Panel() {
-	const tenOptions: string[] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-
-	const itemInput: SelectInputProps = {
-		id: 'itemInput',
-		options: ['0', '1', '2', '3', '4'],
-		selected: 1
+interface PopulateProps {
+	setCards: (data:any) => void;
+}
+function Panel({ setCards }: PopulateProps) {
+	const [checkboxes, setCheckboxes] = useState<{ [key: string]: boolean }>({
+		includeBase: true,
+		includeAlliance: false,
+		includeOutbreak: false,
+		includeNightmare: false,
+		includeMercenaries: false,
+		excludeStdWpns: false,
+		excludePartners: false,
+		excludeInfection: false,
+	});
+	const [amounts, setAmounts] = useState<{ [key: string]: string }>({
+		numWeapons: '7',
+		numActions: '9',
+		numItems: '2',
+	});
+	function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const { name, checked } = event.target;
+		setCheckboxes(prevState => ({
+			...prevState,
+			[name]: checked
+		}));
 	}
+
+	function handleAmountChange(event: React.ChangeEvent<HTMLSelectElement>, key: string) {
+		const value = event.target.value;
+		setAmounts(prevState => ({
+			...prevState,
+			[key]: value
+		}));
+		const totalCount = Number(amounts.numWeapons) + Number(amounts.numItems) + Number(amounts.numActions);
+
+		if (totalCount != 18) {
+			if (key === 'numWeapons' || key === 'numItems') {
+				// Calculate the remaining count for actions
+				const remainingActions = 18 - (Number(amounts.numItems) + Number(amounts.numWeapons));
+				// Update the state with the new count for actions
+				setAmounts(prevState => ({
+					...prevState,
+					numActions: String(remainingActions)
+				}));
+			} else if (key === 'numActions') {
+				// Calculate the remaining count for weapons
+				const remainingWeapons = 18 - (Number(amounts.numItems) + Number(amounts.numActions));
+				// Update the state with the new count for weapons
+				setAmounts(prevState => ({
+					...prevState,
+					numWeapons: String(remainingWeapons)
+				}));
+			}
+		}
+	}
+	async function sendData() {
+		const data = {
+			...amounts,
+			...checkboxes,
+		};
+
+		try {
+			const responseData = await postData('cards', data);
+			console.log('Response data:', responseData);
+			setCards(responseData);
+		} catch (error) {
+			console.error('Error sending data:', error);
+		}
+	}
+
     return (
         <>
             <div className="panel-container">
                 <div className="randomize-container">
-                    <button className="randomize-button"><span className="red-letter">R</span>andomiz<span className="red-letter">E</span></button>
+					<button className="randomize-button" onClick={sendData}><span className="red-letter">R</span>andomiz<span className="red-letter">E</span></button>
                 </div>
                 <div className="panel">
                     <h2>Sets</h2>
-                    <label className="bold-label"><input type="checkbox" name="option1" /> Base</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option2" /> Alliance</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option3" /> Outbreak</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option4" /> Nightmare</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option5" /> Mercenaries</label><br />
-                    <h2>Number of Cards</h2>
-                    <label className="bold-label">
-                        <SelectInput {...itemInput} />
-                        # of Items
-                    </label><br /><br />
-                    <label className="bold-label">
-                        <SelectInput id='weaponsInput' options={tenOptions} selected={6} />
-                        # of Weapons
-                    </label><br /><br />
-                    <label className="bold-label">
-                        <SelectInput id='actionsInput' options={tenOptions} selected={6} />
-                        # of Actions
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeBase} onChange={handleCheckboxChange} name="includeBase" /> Base</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeAlliance} onChange={handleCheckboxChange} name="includeAlliance" /> Alliance</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeOutbreak} onChange={handleCheckboxChange} name="includeOutbreak" /> Outbreak</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeNightmare} onChange={handleCheckboxChange} name="includeNightmare" /> Nightmare</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeMercenaries} onChange={handleCheckboxChange} name="includeMercenaries" /> Mercenaries</label><br />
+					<h2>Amounts</h2>
+					<label className="bold-label">
+						<SelectInput id='itemsInput' options={['1', '2', '3', '4', '5']} onChange={(value) => handleAmountChange(value, 'numItems')} selectedValue={amounts.numItems} />
+						# of Items
+					</label><br /><br />
+					<label className="bold-label">
+						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} onChange={(value) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
+						# of Weapons
+					</label><br /><br />
+					<label className="bold-label">
+						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} onChange={(value) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
+						# of Actions
                     </label><br /><br />
                     <h2>Exclusions</h2>
-                    <label className="bold-label"><input type="checkbox" name="option1" /> Exclude Standard Weapons</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option1" /> Exclude Partners Mechanic</label><br />
-                    <label className="bold-label"><input type="checkbox" name="option1" /> Exclude Infection Mechanic</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeStdWpns} onChange={handleCheckboxChange} name="excludeStdWpns" /> Exclude Standard Weapons</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludePartners} onChange={handleCheckboxChange} name="excludePartners" /> Exclude Partners Mechanic</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeInfection} onChange={handleCheckboxChange} name="excludeInfection" /> Exclude Infection Mechanic</label><br />
                 </div>
             </div>
         </>
@@ -122,27 +178,42 @@ function Card({ type, name, cost, set } : CardProps) {
 		</td>
 	);
 }
-// Define the Props interface
 interface SelectInputProps {
 	options: string[];
-	selected: number;
 	id: string;
+	onChange: any;
+	selectedValue: string;
 }
 
-// Functional component SelectInput
-const SelectInput: React.FC<SelectInputProps> = ({id, options, selected }) => {
+function SelectInput({ id, options, onChange, selectedValue }: SelectInputProps) {
 	return (
-		<select id={id}>
+		<select id={id} onChange={(e) => onChange(e, id)} value={selectedValue}>
 			{options.map((option, index) => {
-				if (index === selected) {
-					return <option key={index} value={option} selected>{option}</option>;
-				} else {
-					return <option key={index} value={option}>{option}</option>;
-				}
+				return <option key={index} value={option}>{option}</option>;
 			})}
 		</select>
 	);
 };
+async function postData(url: string, data: Object) {
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		});
+		if (!response.ok) {
+			throw new Error('Network response was not ok.');
+		}
+		const responseData = await response.json();
+		return responseData;
+	} catch (error) {
+		console.error('Error:', error);
+		throw error;
+	}
+}
+
 export default App;
 
 
@@ -385,262 +456,4 @@ function randomize(listOfCards, numberOfCards) {
 	}
 }
 
-
-
-function displayCard(card) {
-	//add font family depending on set
-	var set = "";
-	if (card.set == "Original") {
-		set = '<font class="original"><b>B</b></font>';
-	}
-	if (card.set == "Alliance") {
-		set = '<font class="alliance"><b>A</b></font>';
-	}
-	if (card.set == "Outbreak") {
-		set = '<font class="outbreak"><b>O</b></font>';
-	}
-	if (card.set == "Nightmare") {
-		set = '<font class="nightmare"><b>N</b></font>';
-	}
-	if (card.set == "Mercenaries") {
-		set = '<font class="mercenaries"><b>M</b></font>';
-	}
-
-	//show the selected card
-	if (card.type == "Weapon") {
-		updateWeapons(card.name + ' (' + set + ')');
-	} else if (card.type == "Action") {
-		updateActions(card.name + ' (' + set + ')');
-	} else if (card.type == "Item") {
-		updateItems(card.name + ' (' + set + ')');
-	} else if (card.type == "Ammo") {
-		updateAmmo(card.name + ' (' + set + ')');
-	}
-	else {
-		updateMansionCards(card.name + ' (' + set + ')');
-	}
-}
-
-
-function showNonRandomCards(cards) {
-	for (var i = 0; i < cards.length; i++) {
-		displayCard(cards[i]);
-	}
-}
-
-
-// update view functions
-function updateStatus(status) {
-	document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + "<br>" + status;
-}
-
-function updateStatusStatic(status) {
-	document.getElementById('status').innerHTML = status;
-}
-
-function updateAmmo(showAmmo) {
-	document.getElementById('showAmmo').innerHTML = document.getElementById('showAmmo').innerHTML + showAmmo + "<br>";
-}
-
-function updateWeapons(showWeapons) {
-	document.getElementById('showWeapons').innerHTML = document.getElementById('showWeapons').innerHTML + showWeapons + "<br>";
-}
-
-function updateActions(showActions) {
-	document.getElementById('showActions').innerHTML = document.getElementById('showActions').innerHTML + showActions + "<br>";
-}
-
-function updateItems(showItems) {
-	document.getElementById('showItems').innerHTML = document.getElementById('showItems').innerHTML + showItems + "<br>";
-}
-
-function updateMansionCards(showMansionCards) {
-	document.getElementById('showMansionCards').innerHTML = document.getElementById('showMansionCards').innerHTML + showMansionCards + "<br>";
-}
-
-function updateTotals(actionsCount, weaponsCount, itemsCount) {
-	var ammoCount = 3;
-	var defaultWeapsAdded = document.selectionsForm.exclusions[0].checked;
-
-	if (defaultWeapsAdded) {
-		weaponsCount = (weaponsCount * 1) + 2;
-	}
-	document.getElementById('ammoCount').innerHTML = ammoCount;
-	document.getElementById('actionCount').innerHTML = actionsCount;
-	document.getElementById('weaponCount').innerHTML = weaponsCount;
-	document.getElementById('itemCount').innerHTML = itemsCount;
-	document.getElementById('cardCount').innerHTML = (itemsCount * 1 + actionsCount * 1 + weaponsCount * 1 + ammoCount * 1);
-}
-
-function replaceStatus(status) {
-	document.getElementById('status').innerHTML = status;
-}
-
-function replaceWeapons(showWeapons) {
-	document.getElementById('showWeapons').innerHTML = showWeapons;
-}
-
-function replaceActions(showActions) {
-	document.getElementById('showActions').innerHTML = showActions;
-}
-
-function replaceItems(showItems) {
-	document.getElementById('showItems').innerHTML = showItems;
-}
-
-function replaceMansionCards(showMansionCards) {
-	document.getElementById('showMansionCards').innerHTML = showMansionCards;
-}
-
-function replaceAmmo(showAmmo) {
-	document.getElementById('showAmmo').innerHTML = showAmmo;
-}
-//Card sets objrcts
-function cardSet(name, cardList) {
-	this.name = name;
-	this.cardList = cardList;
-	this.addCard = addCard;
-}
-
-function addCard(name, filename, cost, type, set) {
-	var newCard = new Card(name, filename, cost, type, set);
-	this.cardList.push(newCard);
-}
-
-function Card(name, filename, cost, type, set) {
-	this.name = name;
-	this.filename = filename;
-	this.cost = cost;
-	this.type = type;
-	this.set = set;
-}
-
-//card sets
-function createOrginalSet() {
-	var original = new cardSet('original', new Array());
-	original.addCard("Deadly Aim", "", 0, "Action", "Original");
-	original.addCard("Escape from the Dead City", "", 0, "Action", "Original");
-	original.addCard("Mansion Foyer", "", 0, "Action", "Original");
-	original.addCard("Reload", "", 0, "Action", "Original");
-	original.addCard("The Merchant", "", 0, "Action", "Original");
-	original.addCard("Umbrella Corporation", "", 0, "Action", "Original");
-	original.addCard("Ominous Battle", "", 0, "Action", "Original");
-	original.addCard("Shattered Memories", "", 0, "Action", "Original");
-	original.addCard("Master of Unlocking", "", 0, "Action", "Original");
-	original.addCard("Back to Back", "", 0, "Action", "Original");
-	original.addCard("Struggle for Survival ", "", 0, "Action", "Original");
-	original.addCard("Grenade", "", 0, "Weapon", "Original");
-	original.addCard("Longbow", "", 0, "Weapon", "Original");
-	original.addCard("Submission", "", 0, "Weapon", "Original");
-	original.addCard("Combat Knife & Survival Knife", "", 0, "Weapon", "Original");
-	original.addCard("Six Shooter", "", 0, "Weapon", "Original");
-	original.addCard("Gatling Gun & Rocket Launcher", "", 0, "Weapon", "Original");
-	original.addCard("Handgun & Burst-Fire Handgun", "", 0, "Weapon", "Original");
-	original.addCard("Assault Machine Gun & Full Bore Machine Gun", "", 0, "Weapon", "Original");
-	original.addCard("Pump-Action Shotgun & Automatic Shotgun", "", 0, "Weapon", "Original");
-	original.addCard("Bolt-Action Rifle & Semi-Automatic Rifle", "", 0, "Weapon", "Original");
-	original.addCard("Gatling Gun Case", "", 0, "Mansion Item", "Original");
-	original.addCard("Rocket Launcher Case", "", 0, "Mansion Item", "Original");
-	original.addCard("Green Herb", "", 0, "Item", "Original");
-	original.addCard("Yellow Herb", "", 0, "Mansion Item", "Original");
-	original.addCard("First Aid Spray", "", 0, "Item", "Original");
-	localStorage.original = JSON.stringify(original);
-}
-function createAllianceSet() {
-	var alliance = new cardSet('alliance', new Array());
-	alliance.addCard("Great Ambition", "", 0, "Action", "Alliance");
-	alliance.addCard("Uroboros Injection", "", 0, "Action", "Alliance");
-	alliance.addCard("Desperate Escape", "", 0, "Action", "Alliance");
-	alliance.addCard("Fierce Battle", "", 0, "Action", "Alliance");
-	alliance.addCard("Gathering Forces", "", 0, "Action", "Alliance");
-	alliance.addCard("Archrival", "", 0, "Action", "Alliance");
-	alliance.addCard("Quirk of Fate", "", 0, "Action", "Alliance");
-	alliance.addCard("Partners", "", 0, "Action", "Alliance");
-	alliance.addCard("Cornered", "", 0, "Action", "Alliance");
-	alliance.addCard("Star-Crossed Duo", "", 0, "Action", "Alliance");
-	alliance.addCard("Combat Knife & Survival Knife", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Handgun & Burst-Fire Handgun", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Flash Grenade & Grenade Launcher", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Telescopic Sight Rifle", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Riot Shotgun & Triple-Barreled Shotgun", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Russian Assault Rifle & Signature Special", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Flamethrower", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Blowback Pistol", "", 0, "Weapon", "Alliance");
-	alliance.addCard("Green Herb", "", 0, "Item", "Alliance");
-	alliance.addCard("Red Herb", "", 0, "Item", "Alliance");
-	alliance.addCard("Explosive Barrel", "", 0, "Mansion Event", "Alliance");
-	alliance.addCard("Collapsing Floor Traps", "", 0, "Mansion Event", "Alliance");
-	alliance.addCard("Laser Targeting Device ", "", 0, "Mansion Event", "Alliance");
-	localStorage.alliance = JSON.stringify(alliance);
-}
-function createOutBreakSet() {
-	var outbreak = new cardSet('outbreak', new Array());
-	outbreak.addCard("Injection", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Wesker's Secret", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Returned Favor", "", 0, "Action", "Outbreak");
-	outbreak.addCard("'I Have This...'", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Higher Priorities", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Parting Ways", "", 0, "Action", "Outbreak");
-	outbreak.addCard("By Any Means Neccesary", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Power of the t-Virus ", "", 0, "Action", "Outbreak");
-	outbreak.addCard("Standard Sidearm & Samurai Edge", "", 0, "Weapon", "Outbreak");
-	outbreak.addCard("Lightning Hawk & Hand Cannon", "", 0, "Weapon", "Outbreak");
-	outbreak.addCard("Stun Rod", "", 0, "Weapon", "Outbreak");
-	outbreak.addCard("Night Scope Rocket Launcher", "", 0, "Weapon", "Outbreak");
-	outbreak.addCard("Antivirus", "", 0, "Mansion Item", "Outbreak");
-	outbreak.addCard("Kevlar Vest", "", 0, "Mansion Item", "Outbreak");
-	outbreak.addCard("Laser Trap", "", 0, "Mansion Event", "Outbreak");
-	outbreak.addCard("Rock Trap", "", 0, "Mansion Event", "Outbreak");
-	localStorage.outbreak = JSON.stringify(outbreak);
-}
-function createNightmareSet() {
-	var nightmare = new cardSet('nightmare', new Array());
-	nightmare.addCard("Lonewolf", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Raccoon City Police Department", "", 0, "Action", "Nightmare");
-	nightmare.addCard("High Value Targets", "", 0, "Action", "Nightmare");
-	nightmare.addCard("PDA", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Toe to Toe", "", 0, "Action", "Nightmare");
-	nightmare.addCard("A Gift?", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Mind Control", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Long Awaited Dawn", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Vengeful Intention", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Symbol of Evil ", "", 0, "Action", "Nightmare");
-	nightmare.addCard("Silver Ghost & Punisher", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Mine Thrower", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Broken Butterfly", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Single Shot Rifle w/ Scope & Special Ops Rifle", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Machine Pistol w/ Stock & Gangster's Machine Gun", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Flashbang", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("HE Grenade", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Incendiary Grenade", "", 0, "Weapon", "Nightmare");
-	nightmare.addCard("Treasure Map", "", 0, "Mansion Item", "Nightmare");
-	nightmare.addCard("Hidden Treasure ", "", 0, "Mansion Item", "Nightmare");
-	nightmare.addCard("P.R.L. 412", "", 0, "Mansion Event", "Nightmare");
-	localStorage.nightmare = JSON.stringify(nightmare);
-}
-
-function createMercenariesSet() {
-	var mercenaries = new cardSet('mercenaries', new Array());
-	mercenaries.addCard("Custom Standard Sidearm", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Reliable Blade", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("First Aid Spray", "", 0, "Item", "Mercenaries");
-	mercenaries.addCard("Fight or Flight", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("The Mercenaries", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Boundless Battlefield", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Coup de Grace", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Melee", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Anticipation", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Backstab", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Battle Hardened", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Resuscitate", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Tear Gas", "", 0, "Action", "Mercenaries");
-	mercenaries.addCard("Ibex Standard", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Custom Pump-Action Shotgun", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Custom Full-Bore Machine Gun", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Custom Lightning Hawk", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Custom Bolt-Action Rifle", "", 0, "Weapon", "Mercenaries");
-	mercenaries.addCard("Hunting Bow", "", 0, "Weapon", "Mercenaries");
-
-	localStorage.mercenaries = JSON.stringify(mercenaries);
-}
 */
