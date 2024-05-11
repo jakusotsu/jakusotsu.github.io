@@ -301,6 +301,15 @@ header h1 {
     border: 1px solid black; /* Add border for visualization */
 }
 
+.card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure the image covers the entire width of the card */
+    height: 100%; /* Ensure the image covers the entire height of the card */
+    object-fit: cover; /* Maintain aspect ratio and cover the entire space */
+}
+
 .type {
     position: absolute;
     top: 10px; /* Adjust top position as needed */

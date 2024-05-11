@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-
+import React from 'react';
 interface Cardd {
 	name: string;
 	filepath: string;
@@ -27,7 +27,7 @@ function App() {
 		if (!resultArray[rowIndex]) {
 			resultArray[rowIndex] = []; // start a new chunk
 		}
-		const cardProps: CardProps = { type: item.type, name: item.name, cost: item.cost, set: item.set }
+		const cardProps: CardProps = { type: item.type, name: item.name, cost: item.cost, set: item.set, filepath: item.filepath }
 
 		resultArray[rowIndex].push(cardProps);
 
@@ -61,6 +61,7 @@ interface CardProps {
 	name: string;
 	cost: number;
 	set: string;
+	filepath: string;
 }
 interface PopulateProps {
 	setCards: (data:any) => void;
@@ -140,7 +141,7 @@ function Panel({ setCards }: PopulateProps) {
                 </div>
                 <div className="panel">
                     <h2>Sets</h2>
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeBase} onChange={handleCheckboxChange} name="includeBase" /> Base</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeBase} onChange={handleCheckboxChange} name="includeBase" /> Premier</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeAlliance} onChange={handleCheckboxChange} name="includeAlliance" /> Alliance</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeOutbreak} onChange={handleCheckboxChange} name="includeOutbreak" /> Outbreak</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeNightmare} onChange={handleCheckboxChange} name="includeNightmare" /> Nightmare</label><br />
@@ -168,15 +169,22 @@ function Panel({ setCards }: PopulateProps) {
     );
 }
 
-function Card({ type, name, cost, set } : CardProps) {
-	return (
-		<td className="card">
-			<div className="type">{type}</div>
-			<div className="name">{name}</div>
-			<div className="cost">{cost}</div>
-			<div className="set">{set}</div>
-		</td>
-	);
+function Card({ type, name, cost, set, filepath }: CardProps) {
+    if (filepath != '') {
+		return (
+			<td className="card">
+				<img src={filepath} />
+			</td>
+		);
+    }
+    return (
+        <td className="card">
+            <div className="type">{type}</div>
+            <div className="name">{name}</div>
+            <div className="cost">{cost}</div>
+            <div className="set">{set}</div>
+        </td>
+    );
 }
 interface SelectInputProps {
 	options: string[];
@@ -194,7 +202,7 @@ function SelectInput({ id, options, onChange, selectedValue }: SelectInputProps)
 		</select>
 	);
 };
-async function postData(url: string, data: Object) {
+async function postData(url: string, data: { [key: string]: string }) {
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
