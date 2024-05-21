@@ -24,6 +24,7 @@ public class Filters
         public bool excludeStdWpns { get; set; }
         public bool excludePartners { get; set; }
         public bool excludeInfection { get; set; }
+        public bool excludeSkills { get; set; }
         public string numWeapons { get; set; }
         public string numActions { get; set; }
         public string numItems { get; set; }

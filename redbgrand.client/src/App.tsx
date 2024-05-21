@@ -8,6 +8,7 @@ interface Cardd {
 	set: string;
 	cost: number;
 	description: string;
+	subtype: string;
 }
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
 	}, []);
 
 	const cardRows = cards === undefined ? [] : cards.reduce((resultArray, item, index) => {
-		const rowIndex = Math.floor(index / 6);
+		const rowIndex = Math.floor(index / 4);
 
 		if (!resultArray[rowIndex]) {
 			resultArray[rowIndex] = []; // start a new chunk
@@ -76,11 +77,12 @@ function Panel({ setCards }: PopulateProps) {
 		excludeStdWpns: false,
 		excludePartners: false,
 		excludeInfection: false,
+		excludeSkills: false,
 	});
 	const [amounts, setAmounts] = useState<{ [key: string]: string }>({
-		numWeapons: '7',
-		numActions: '9',
-		numItems: '2',
+		numWeapons: '4',
+		numActions: '7',
+		numItems: '1',
 	});
 	function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const { name, checked } = event.target;
@@ -92,31 +94,42 @@ function Panel({ setCards }: PopulateProps) {
 
 	function handleAmountChange(event: React.ChangeEvent<HTMLSelectElement>, key: string) {
 		const value = event.target.value;
-		setAmounts(prevState => ({
-			...prevState,
-			[key]: value
-		}));
-		const totalCount = Number(amounts.numWeapons) + Number(amounts.numItems) + Number(amounts.numActions);
+		var actionCount = Number(amounts.numActions);
+		var weaponCount = Number(amounts.numWeapons);
+		var itemCount = Number(amounts.numItems);
 
-		if (totalCount != 18) {
-			if (key === 'numWeapons' || key === 'numItems') {
-				// Calculate the remaining count for actions
-				const remainingActions = 18 - (Number(amounts.numItems) + Number(amounts.numWeapons));
-				// Update the state with the new count for actions
-				setAmounts(prevState => ({
-					...prevState,
-					numActions: String(remainingActions)
-				}));
-			} else if (key === 'numActions') {
-				// Calculate the remaining count for weapons
-				const remainingWeapons = 18 - (Number(amounts.numItems) + Number(amounts.numActions));
-				// Update the state with the new count for weapons
-				setAmounts(prevState => ({
-					...prevState,
-					numWeapons: String(remainingWeapons)
-				}));
+
+		if (key === 'numItems') {
+			itemCount = Number(value);
+			const totalCount = actionCount + weaponCount + itemCount;
+			if (totalCount != 12) {
+				const remainingActions = 12 - (itemCount + weaponCount);
+				actionCount = remainingActions;
 			}
 		}
+		else if (key === 'numActions') {
+			actionCount = Number(value);
+			const totalCount = actionCount + weaponCount + itemCount;
+			if (totalCount != 12) {
+				const remainingWeapons = 12 - (itemCount + actionCount);
+				weaponCount = remainingWeapons;
+			}
+		}
+		else if (key === 'numWeapons') {
+			weaponCount = Number(value);
+			const totalCount = actionCount + weaponCount + itemCount;
+            if (totalCount != 12) {
+				const remainingActions = 12 - (itemCount + weaponCount);
+				actionCount = remainingActions;
+            }
+		}
+
+		setAmounts(prevState => ({
+			...prevState,
+			numItems: String(itemCount),
+			numWeapons: String(weaponCount),
+			numActions: String(actionCount),
+		}));
 	}
 	async function sendData() {
 		const data = {
@@ -148,21 +161,22 @@ function Panel({ setCards }: PopulateProps) {
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeMercenaries} onChange={handleCheckboxChange} name="includeMercenaries" /> Mercenaries</label><br />
 					<h2>Amounts</h2>
 					<label className="bold-label">
-						<SelectInput id='itemsInput' options={['1', '2', '3', '4', '5']} onChange={(value) => handleAmountChange(value, 'numItems')} selectedValue={amounts.numItems} />
+						<SelectInput id='itemsInput' options={['1', '2', '3']} onChange={(value: any) => handleAmountChange(value, 'numItems')} selectedValue={amounts.numItems} />
 						# of Items
 					</label><br /><br />
 					<label className="bold-label">
-						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} onChange={(value) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
+						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} onChange={(value: any) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
 						# of Weapons
 					</label><br /><br />
 					<label className="bold-label">
-						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} onChange={(value) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
+						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} onChange={(value: any) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
 						# of Actions
                     </label><br /><br />
                     <h2>Exclusions</h2>
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeStdWpns} onChange={handleCheckboxChange} name="excludeStdWpns" /> Exclude Standard Weapons</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludePartners} onChange={handleCheckboxChange} name="excludePartners" /> Exclude Partners Mechanic</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeInfection} onChange={handleCheckboxChange} name="excludeInfection" /> Exclude Infection Mechanic</label><br />
+					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeSkills} onChange={handleCheckboxChange} name="excludeSkills" /> Exclude Skills Mechanic</label><br />
                 </div>
             </div>
         </>
@@ -202,7 +216,7 @@ function SelectInput({ id, options, onChange, selectedValue }: SelectInputProps)
 		</select>
 	);
 };
-async function postData(url: string, data: { [key: string]: string }) {
+async function postData(url: string, data: { [x:string]:string | boolean }) {
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
