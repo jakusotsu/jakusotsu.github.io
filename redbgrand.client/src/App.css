@@ -86,23 +86,23 @@ font.crandomizer {
     font-weight: bolder;
 }
 
-font.original {
+.color-original {
     color: rgb(224,37,27);
 }
 
-font.alliance {
+.color-alliance {
     color: rgb(0,100,245);
 }
 
-font.outbreak {
+.color-outbreak {
     color: rgb(224,155,27);
 }
 
-font.nightmare {
+.color-nightmare {
     color: rgb(218,45,227);
 }
 
-font.mercenaries {
+.color-mercenaries {
     color: rgb(139,137,137);
 }
 
@@ -207,10 +207,10 @@ tr {
 }
 
 
-img {
+/*img {
     max-width: 100%;
     max-height: 100%;
-}
+}*/
 
 
 .container {
@@ -230,6 +230,7 @@ img {
     flex: 1;
     max-width: 10vw;
     background-color: black;
+    padding: 20px;
 }
 
 .panel {
@@ -299,7 +300,7 @@ header h1 {
     width: 120px; /* Adjust width as needed */
     height: 180px; /* Adjust height as needed */
     border: 1px solid black; /* Add border for visualization */
-}
+    }
 
 .card img {
     position: absolute;
@@ -337,3 +338,15 @@ header h1 {
     bottom: 10px; /* Adjust bottom position as needed */
     right: 10px; /* Adjust right position as needed */
 }
+
+.set2 {
+    position: absolute;
+    bottom: calc(60px); /* Adjust bottom position as needed */
+    left:50%;
+    text-align: center;
+    transform: translateX(-50%); /* Center the element */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: Add background for better visibility */
+    padding: 5px; /* Optional: Add some padding */
+    z-index: 2; /* Set a lower z-index for the image */
+}
+

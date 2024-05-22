@@ -37,19 +37,19 @@ function App() {
 	return (
         <>
             <div className="container">
-                <div className="content">
-                    <table className="table">
-                        <tbody>
-                            {cardRows.map((row: Cardd[], rowIndex: number) => (
-                                <tr key={rowIndex}>
-                                    {row.map((cell: CardProps, cellIndex: number) => (
-										<Card key={cellIndex} {...cell} />
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
+				<div className="content">
+						<table className="table">
+							<tbody>
+								{cardRows.map((row: Cardd[], rowIndex: number) => (
+									<tr key={rowIndex}>
+										{row.map((cell: CardProps, cellIndex: number) => (
+											<Card key={cellIndex} {...cell} />
+										))}
+									</tr>
+								))}
+							</tbody>
 
-                    </table>
+						</table>
 					<Panel setCards={setCards} />
                 </div>
             </div>
@@ -154,22 +154,22 @@ function Panel({ setCards }: PopulateProps) {
                 </div>
                 <div className="panel">
                     <h2>Sets</h2>
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeBase} onChange={handleCheckboxChange} name="includeBase" /> Premier</label><br />
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeAlliance} onChange={handleCheckboxChange} name="includeAlliance" /> Alliance</label><br />
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeOutbreak} onChange={handleCheckboxChange} name="includeOutbreak" /> Outbreak</label><br />
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeNightmare} onChange={handleCheckboxChange} name="includeNightmare" /> Nightmare</label><br />
-					<label className="bold-label"><input type="checkbox" checked={checkboxes.includeMercenaries} onChange={handleCheckboxChange} name="includeMercenaries" /> Mercenaries</label><br />
+					<label className="bold-label color-original"><input type="checkbox" checked={checkboxes.includeBase} onChange={handleCheckboxChange} name="includeBase" /> Premier</label><br />
+					<label className="bold-label color-alliance"><input type="checkbox" checked={checkboxes.includeAlliance} onChange={handleCheckboxChange} name="includeAlliance" /> Alliance</label><br />
+					<label className="bold-label color-outbreak"><input type="checkbox" checked={checkboxes.includeOutbreak} onChange={handleCheckboxChange} name="includeOutbreak" /> Outbreak</label><br />
+					<label className="bold-label color-nightmare"><input type="checkbox" checked={checkboxes.includeNightmare} onChange={handleCheckboxChange} name="includeNightmare" /> Nightmare</label><br />
+					<label className="bold-label color-mercenaries"><input type="checkbox" checked={checkboxes.includeMercenaries} onChange={handleCheckboxChange} name="includeMercenaries" /> Mercenaries</label><br />
 					<h2>Amounts</h2>
 					<label className="bold-label">
 						<SelectInput id='itemsInput' options={['1', '2', '3']} onChange={(value: any) => handleAmountChange(value, 'numItems')} selectedValue={amounts.numItems} />
 						# of Items
 					</label><br /><br />
 					<label className="bold-label">
-						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} onChange={(value: any) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
+						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']} onChange={(value: any) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
 						# of Weapons
 					</label><br /><br />
 					<label className="bold-label">
-						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']} onChange={(value: any) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
+						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']} onChange={(value: any) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
 						# of Actions
                     </label><br /><br />
                     <h2>Exclusions</h2>
@@ -184,9 +184,18 @@ function Panel({ setCards }: PopulateProps) {
 }
 
 function Card({ type, name, cost, set, filepath }: CardProps) {
-    if (filepath != '') {
+	if (filepath != '') {
+		const setColors : Record<string, string> = {
+			'Premier' : 'color-original',
+			'Alliance': 'color-alliance',
+			'Outbreak': 'color-outbreak',
+			'Nightmare': 'color-nightmare',
+			'Mercenaries': 'color-mercenaries',
+		};
+
 		return (
 			<td className="card">
+				<div className={"set2 " + setColors[set]}>{set}</div>
 				<img src={filepath} />
 			</td>
 		);
