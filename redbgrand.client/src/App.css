@@ -185,10 +185,10 @@ body {
 
 
 td, th {
-    width: 120px; /* Set a fixed width for table cells */
-    height: 180px; /* Set a fixed height for table cells */
-    min-width: 120px;
-    max-width: 120px;
+    /*width: 120px;*/ /* Set a fixed width for table cells */
+    /*height: 180px;*/ /* Set a fixed height for table cells */
+/*    min-width: 120px;
+    max-width: 120px;*/
     border: 2px solid black;
     border-radius: 10px;
     background-color: white;
@@ -219,6 +219,13 @@ tr {
     align-items: baseline; /* Vertically center the content */
     height: 100vh; /* Optionally set the height to fill the viewport */
     margin: 0 auto; /* Center the container horizontally */
+
+    /*display: flex;
+    justify-content: center;*/ /* Horizontally center the content */
+    /*align-items: flex-start;*/ /* Align items to the start vertically */
+    /*height: 100vh;*/ /* Optionally set the height to fill the viewport */
+    /*margin: 0 auto;*/ /* Center the container horizontally */
+    /*gap: 20px;*/ /* Add space between the panel and the table */
 }
 
 .table {
@@ -257,10 +264,11 @@ tr {
     position: relative; /* Needed for positioning the R */
 }
 
+@media (hover: hover) {
     .randomize-button:hover {
         background-color: #222; /* Darker background color on hover */
     }
-
+}
 
 .randomize-container {
     text-align: center; /* Center the button horizontally */
@@ -350,3 +358,25 @@ header h1 {
     z-index: 2; /* Set a lower z-index for the image */
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column-reverse; /* Stack elements vertically on smaller screens */
+        align-items: center; /* Center align items */
+    }
+
+    header h1 {
+        font-size: 32px; /* Adjust the size for smaller screens */
+    }
+    .card {
+        max-width: 80px; 
+        max-height: 120px;
+        width: 80px; 
+        height: 120px; 
+    }
+
+    tr {
+        max-height:109px;
+        height: 109px;
+    }
+}
