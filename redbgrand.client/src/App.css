@@ -1,4 +1,4 @@
-﻿/*:root {
+﻿:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,7 +11,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}*/
+}
 
 
 a {
@@ -36,27 +36,6 @@ button {
     transition: border-color 0.25s;
 }
 
-    button:hover {
-        border-color: #646cff;
-    }
-
-    button:focus,
-    button:focus-visible {
-        outline: 4px auto -webkit-focus-ring-color;
-    }
-
-/*@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}*/
 A:link {
     COLOR: red /*The color of the link*/
 }
@@ -69,10 +48,7 @@ A:hover {
     COLOR: green /*The color of the mouseover or 'hover' link*/
 }
 
-
-
-
-font.header {
+/*font.header {
     color: rgb(150,18,18);
     font-family: Garamond;
     font-size: 30px;
@@ -84,7 +60,7 @@ font.crandomizer {
     font-family: Garamond;
     font-size: 20px;
     font-weight: bolder;
-}
+}*/
 
 .color-original {
     color: rgb(224,37,27);
@@ -264,20 +240,14 @@ tr {
     position: relative; /* Needed for positioning the R */
 }
 
-@media (hover: hover) {
-    .randomize-button:hover {
-        background-color: #222; /* Darker background color on hover */
-    }
-}
+
 
 .randomize-container {
     text-align: center; /* Center the button horizontally */
     margin-bottom: 20px; /* Add margin at the bottom to separate from the panel */
 }
 
-.randomize-button:hover {
-    background-color: rgb(150,18,18);
-}
+
 
 .red-letter {
     color: red; /* Apply red color to the specified letters */
@@ -379,4 +349,33 @@ header h1 {
         max-height:109px;
         height: 109px;
     }
+
+    .randomize-button:active {
+        background-color: rgb(150,18,18);
+        color: white;
+    }
+
+    .delayed {
+        transition: all 0.2s;
+        transition-delay: 300ms;
+
+    }
+
+    .delayed:active {
+        transition: none;
+    }
 }
+
+@media (min-width: 769px) {
+
+    @media (hover: hover) {
+        .randomize-button:hover {
+            background-color: #222;
+        }
+    }
+
+    .randomize-button:active {
+        background-color: red;
+    }
+}
+

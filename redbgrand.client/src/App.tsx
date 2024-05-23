@@ -150,7 +150,7 @@ function Panel({ setCards }: PopulateProps) {
         <>
             <div className="panel-container">
                 <div className="randomize-container">
-					<button className="randomize-button" onClick={sendData}><span className="red-letter">R</span>andomiz<span className="red-letter">E</span></button>
+					<button className="randomize-button delayed" onClick={sendData}><span className="red-letter">R</span>andomiz<span className="red-letter">E</span></button>
                 </div>
                 <div className="panel">
                     <h2>Sets</h2>
