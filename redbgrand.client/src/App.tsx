@@ -35,25 +35,25 @@ function App() {
 		return resultArray;
 	} , []);
 	return (
-        <>
-            <div className="container">
+		<>
+			<div className="container">
 				<div className="content">
-						<table className="table">
-							<tbody>
-								{cardRows.map((row: Cardd[], rowIndex: number) => (
-									<tr key={rowIndex}>
-										{row.map((cell: CardProps, cellIndex: number) => (
-											<Card key={cellIndex} {...cell} />
-										))}
-									</tr>
+					{/* Changed from <table> to <div> */}
+					<div className="card-grid">
+						{/* Changed from <tr> to <div> */}
+						{cardRows.map((row: Cardd[], rowIndex: number) => (
+							<div key={rowIndex} className="card-row">
+								{/* Changed from <td> to <div> */}
+								{row.map((cell: CardProps, cellIndex: number) => (
+									<Card key={cellIndex} {...cell} />
 								))}
-							</tbody>
-
-						</table>
+							</div>
+						))}
+					</div>
 					<Panel setCards={setCards} />
-                </div>
-            </div>
-        </>
+				</div>
+			</div>
+		</>
 	);
 }
 

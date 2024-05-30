@@ -6,7 +6,7 @@ header {
     padding: 20px;
     background-color: #333;
     color: white;
-    font-family: "Compacta Light";
+    font-family: "Compacta";
     font-weight: 100;
 }
 BODY {
@@ -21,4 +21,13 @@ html, body {
     margin: 0; /* Remove default margin */
     padding: 0; /* Remove default padding */
     height: 100%; /* Set height to 100% */
+}
+
+@font-face {
+    font-family: 'Compacta';
+    src: url('../src/assets/fonts/Compacta/Compacta.ttf') format('truetype');
+    src: url('../src/assets/fonts/Compacta/Compacta.woff') format('woff');
+    src: url('../src/assets/fonts/Compacta/Compacta.eot') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
 }

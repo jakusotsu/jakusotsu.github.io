@@ -1,18 +1,15 @@
 ﻿:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-
 
 a {
     font-weight: 500;
@@ -22,6 +19,18 @@ a {
 
     a:hover {
         color: #535bf2;
+    }
+
+    a:link {
+        color: red; /* The color of the link */
+    }
+
+    a:visited {
+        color: #800080; /* The color of the visited link */
+    }
+
+    a:hover {
+        color: green; /* The color of the mouseover or 'hover' link */
     }
 
 button {
@@ -35,32 +44,6 @@ button {
     cursor: pointer;
     transition: border-color 0.25s;
 }
-
-A:link {
-    COLOR: red /*The color of the link*/
-}
-
-A:visited {
-    COLOR: #800080 /*The color of the visited link*/
-}
-
-A:hover {
-    COLOR: green /*The color of the mouseover or 'hover' link*/
-}
-
-/*font.header {
-    color: rgb(150,18,18);
-    font-family: Garamond;
-    font-size: 30px;
-    font-weight: bolder;
-}
-
-font.crandomizer {
-    color: rgb(150,18,18);
-    font-family: Garamond;
-    font-size: 20px;
-    font-weight: bolder;
-}*/
 
 .color-original {
     color: rgb(224,37,27);
@@ -159,70 +142,97 @@ body {
     margin: 0;
 }
 
-
-td, th {
-    /*width: 120px;*/ /* Set a fixed width for table cells */
-    /*height: 180px;*/ /* Set a fixed height for table cells */
-/*    min-width: 120px;
-    max-width: 120px;*/
-    border: 2px solid black;
-    border-radius: 10px;
-    background-color: white;
-    text-align: center;
-    font-size: 16px;
-    padding: 5px;
-    vertical-align: middle;
-    color: black;
-}
-
-tr {
-    height: 180px; /* Set a fixed height for table rows */
-    min-height: 180px; /* Ensure the minimum height of table rows */
-    filter: drop-shadow(0 0 0.75rem crimson);
-    background-color: black;
-}
-
-
-/*img {
-    max-width: 100%;
-    max-height: 100%;
-}*/
-
-
 .container {
     display: flex;
-    justify-content: center; /* Horizontally center the content */
-    align-items: baseline; /* Vertically center the content */
-    height: 100vh; /* Optionally set the height to fill the viewport */
-    margin: 0 auto; /* Center the container horizontally */
-
-    /*display: flex;
-    justify-content: center;*/ /* Horizontally center the content */
-    /*align-items: flex-start;*/ /* Align items to the start vertically */
-    /*height: 100vh;*/ /* Optionally set the height to fill the viewport */
-    /*margin: 0 auto;*/ /* Center the container horizontally */
-    /*gap: 20px;*/ /* Add space between the panel and the table */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.table {
-    border-collapse: separate;
-    margin: 0 auto; /* Add this line to center the table horizontally */
-    table-layout: fixed;
-    width: 100%;
-    /*    display: flex;*/
-    flex: 1;
-    max-width: 10vw;
-    background-color: black;
-    padding: 20px;
+.content {
+    display: flex;
+    flex-direction: row;
 }
 
+.card-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    width: 120px; /* Adjust width as needed */
+    height: 180px; /* Adjust height as needed */
+    border-image: linear-gradient(45deg, red, transparent) 1; /* Gradient border */
+    transition: transform 0.3s ease; /* Smooth zoom effect */
+    z-index: 1; /* Set initial z-index */
+}
+
+    .card img {
+        max-width: 100%;
+        border-radius: 5px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%; /* Ensure the image covers the entire width of the card */
+        height: 100%; /* Ensure the image covers the entire height of the card */
+        object-fit: cover; /* Maintain aspect ratio and cover the entire space */
+    }
+    .card:hover {
+        transform: scale(2.0); /* Zoom the card on hover */
+        z-index: 2; /* Bring the zoomed card to the top */
+    }
+.card-details {
+    text-align: center;
+}
+
+.set2 {
+    margin-bottom: 5px;
+    font-weight: bold;
+    position: absolute;
+    bottom: calc(60px); /* Adjust bottom position as needed */
+    left: 50%;
+    text-align: center;
+    transform: translateX(-50%); /* Center the element */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: Add background for better visibility */
+    padding: 5px; /* Optional: Add some padding */
+    z-index: 2; /* Set a lower z-index for the image */
+}
+
+.panel-container {
+    position: relative; /* Ensure proper positioning of children */
+    background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Adjust padding as needed */
+    margin-top: 20px; /* Adjust margin as needed */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
 .panel {
     width: 200px; /* Adjust the width as needed */
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* Set white background for the panel */
     border: 2px solid white;
     border-radius: 10px; /* Add curved corners */
     color: black;
+}
+.randomize-container {
+    text-align: center; /* Center the button horizontally */
+    margin-bottom: 20px; /* Add margin at the bottom to separate from the panel */
 }
 
 .randomize-button {
@@ -240,29 +250,8 @@ tr {
     position: relative; /* Needed for positioning the R */
 }
 
-
-
-.randomize-container {
-    text-align: center; /* Center the button horizontally */
-    margin-bottom: 20px; /* Add margin at the bottom to separate from the panel */
-}
-
-
-
 .red-letter {
     color: red; /* Apply red color to the specified letters */
-}
-
-.content {
-    display: flex; /* Display children side by side */
-}
-
-.panel-container {
-    position: relative; /* Ensure proper positioning of children */
-    background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
-    border-radius: 10px; /* Rounded corners */
-    padding: 10px; /* Adjust padding as needed */
-    margin-top: 20px; /* Adjust margin as needed */
 }
 
 .bold-label {
@@ -271,61 +260,6 @@ tr {
 
 header h1 {
     font-size: 56px; /* Adjust the size as needed */
-}
-
-.card {
-    position: relative;
-    width: 120px; /* Adjust width as needed */
-    height: 180px; /* Adjust height as needed */
-    border: 1px solid black; /* Add border for visualization */
-    }
-
-.card img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%; /* Ensure the image covers the entire width of the card */
-    height: 100%; /* Ensure the image covers the entire height of the card */
-    object-fit: cover; /* Maintain aspect ratio and cover the entire space */
-}
-
-.type {
-    position: absolute;
-    top: 10px; /* Adjust top position as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-}
-
-.name {
-    position: absolute;
-    bottom: calc(50px); /* Adjust bottom position as needed */
-    text-align: center;
-    left: 0; /* Align the name to the left */
-    width: 100%; /* Make the name span the entire width */
-}
-
-.cost {
-    position: absolute;
-    top: 10px; /* Adjust top position as needed */
-    right: 10px; /* Adjust right position as needed */
-}
-
-.set {
-    position: absolute;
-    bottom: 10px; /* Adjust bottom position as needed */
-    right: 10px; /* Adjust right position as needed */
-}
-
-.set2 {
-    position: absolute;
-    bottom: calc(60px); /* Adjust bottom position as needed */
-    left:50%;
-    text-align: center;
-    transform: translateX(-50%); /* Center the element */
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: Add background for better visibility */
-    padding: 5px; /* Optional: Add some padding */
-    z-index: 2; /* Set a lower z-index for the image */
 }
 
 /* Responsive Styles */
@@ -338,15 +272,16 @@ header h1 {
     header h1 {
         font-size: 32px; /* Adjust the size for smaller screens */
     }
+
     .card {
-        max-width: 80px; 
+        max-width: 80px;
         max-height: 120px;
-        width: 80px; 
-        height: 120px; 
+        width: 80px;
+        height: 120px;
     }
 
     tr {
-        max-height:109px;
+        max-height: 109px;
         height: 109px;
     }
 
@@ -358,16 +293,14 @@ header h1 {
     .delayed {
         transition: all 0.2s;
         transition-delay: 300ms;
-
     }
 
-    .delayed:active {
-        transition: none;
-    }
+        .delayed:active {
+            transition: none;
+        }
 }
 
 @media (min-width: 769px) {
-
     @media (hover: hover) {
         .randomize-button:hover {
             background-color: #222;
@@ -378,4 +311,3 @@ header h1 {
         background-color: red;
     }
 }
-
