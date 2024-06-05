@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import React from 'react';
 interface Cardd {
@@ -14,14 +14,24 @@ interface Cardd {
 function App() {
 	const [cards, setCards] = useState<any[]>([]);
 	const populateCardsData = async () => {
-		const response = await fetch('cards');
-		const data = await response.json();
-		setCards(data);
+		try {
+			const response = await fetch('/cards');
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			setCards(data);
+		} catch (error) {
+			console.error('Fetch error:', error);
+		}
 	}
 	useEffect(() => {
 		populateCardsData();
 	}, []);
-
+	const bottomRef = useRef<HTMLDivElement>(null);
+	const scrollToBottom = () => {
+		bottomRef?.current?.scrollIntoView({ behavior: 'smooth' });
+	};
 	const cardRows = cards === undefined ? [] : cards.reduce((resultArray, item, index) => {
 		const rowIndex = Math.floor(index / 4);
 
@@ -38,21 +48,19 @@ function App() {
 		<>
 			<div className="container">
 				<div className="content">
-					{/* Changed from <table> to <div> */}
 					<div className="card-grid">
-						{/* Changed from <tr> to <div> */}
 						{cardRows.map((row: Cardd[], rowIndex: number) => (
 							<div key={rowIndex} className="card-row">
-								{/* Changed from <td> to <div> */}
 								{row.map((cell: CardProps, cellIndex: number) => (
 									<Card key={cellIndex} {...cell} />
 								))}
 							</div>
 						))}
 					</div>
-					<Panel setCards={setCards} />
+					<Panel setCards={setCards} scrollToBottom={scrollToBottom} />
 				</div>
 			</div>
+			<div ref={bottomRef} />
 		</>
 	);
 }
@@ -65,9 +73,10 @@ interface CardProps {
 	filepath: string;
 }
 interface PopulateProps {
-	setCards: (data:any) => void;
+	setCards: (data: any) => void;
+	scrollToBottom: () => void;
 }
-function Panel({ setCards }: PopulateProps) {
+function Panel({ setCards, scrollToBottom }: PopulateProps) {
 	const [checkboxes, setCheckboxes] = useState<{ [key: string]: boolean }>({
 		includeBase: true,
 		includeAlliance: false,
@@ -141,6 +150,7 @@ function Panel({ setCards }: PopulateProps) {
 			const responseData = await postData('cards', data);
 			console.log('Response data:', responseData);
 			setCards(responseData);
+			scrollToBottom();
 		} catch (error) {
 			console.error('Error sending data:', error);
 		}
@@ -163,15 +173,15 @@ function Panel({ setCards }: PopulateProps) {
 					<label className="bold-label">
 						<SelectInput id='itemsInput' options={['1', '2', '3']} onChange={(value: any) => handleAmountChange(value, 'numItems')} selectedValue={amounts.numItems} />
 						# of Items
-					</label><br /><br />
+					</label><br />
 					<label className="bold-label">
 						<SelectInput id='weaponsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']} onChange={(value: any) => handleAmountChange(value, 'numWeapons')} selectedValue={amounts.numWeapons} />
 						# of Weapons
-					</label><br /><br />
+					</label><br />
 					<label className="bold-label">
 						<SelectInput id='actionsInput' options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']} onChange={(value: any) => handleAmountChange(value, 'numActions')} selectedValue={amounts.numActions} />
 						# of Actions
-                    </label><br /><br />
+                    </label><br />
                     <h2>Exclusions</h2>
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludeStdWpns} onChange={handleCheckboxChange} name="excludeStdWpns" /> Exclude Standard Weapons</label><br />
 					<label className="bold-label"><input type="checkbox" checked={checkboxes.excludePartners} onChange={handleCheckboxChange} name="excludePartners" /> Exclude Partners Mechanic</label><br />
